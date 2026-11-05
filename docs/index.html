@@ -1,0 +1,803 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#6232d6">
+<title>Livro &amp; Copo</title>
+<meta name="description" content="O amigo secreto da família: um livro, uma bebida e um palpite.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fff1cf;
+    --dot: #ffd98a;
+    --card: #fffdf7;
+    --ink: #23172e;
+    --muted: #5c4f66;
+    --purple: #6232d6;
+    --pink: #ff5c8a;
+    --pink-dark: #f23a6f;
+    --yellow: #ffcb37;
+    --teal: #19c3b2;
+    --ok: #0b6b58;
+    --ok-bg: #cdf6ec;
+    --bad: #b01e4a;
+    --bad-bg: #ffdce6;
+    --border: 3px solid var(--ink);
+    --pop: 4px 4px 0 var(--ink);
+    --radius: 20px;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    background-color: var(--bg);
+    background-image: radial-gradient(var(--dot) 2px, transparent 2.5px);
+    background-size: 22px 22px;
+    color: var(--ink);
+    font: 600 1rem/1.5 Nunito, system-ui, sans-serif;
+    -webkit-text-size-adjust: 100%;
+    overflow-x: hidden;
+  }
+
+  header {
+    position: relative;
+    overflow: hidden;
+    background: var(--purple);
+    border-bottom: var(--border);
+    color: #fff;
+    padding: calc(1.6rem + env(safe-area-inset-top)) 1rem 1.4rem;
+    text-align: center;
+  }
+
+  .floaty {
+    position: absolute;
+    font-size: 2rem;
+    animation: bob 3s ease-in-out infinite;
+  }
+
+  .floaty.a { left: 6%; top: 22%; }
+  .floaty.b { right: 7%; top: 16%; animation-delay: -1s; }
+  .floaty.c, .floaty.d { display: none; } /* no celular cobririam o subtítulo */
+
+  h1, h2, .combo-value, .score, summary, .gift-title {
+    font-family: Fredoka, "Trebuchet MS", sans-serif;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  h1 {
+    display: inline-block;
+    margin: 0;
+    font-size: 2.6rem;
+    font-weight: 700;
+    transform: rotate(-2deg);
+    text-shadow: 3px 3px 0 var(--ink);
+  }
+
+  h1 span { color: var(--yellow); }
+  header p { margin: .35rem 0 0; font-weight: 700; }
+
+  h2 { margin: 0 0 .25rem; font-size: 1.45rem; }
+
+  main {
+    width: 100%;
+    max-width: 34rem;
+    margin: 0 auto;
+    padding: 1.1rem 1rem calc(2rem + env(safe-area-inset-bottom));
+  }
+
+  .steps {
+    display: flex;
+    gap: .4rem;
+    margin: 0 0 1.1rem;
+    padding: 0;
+    list-style: none;
+    font-size: .82rem;
+    font-weight: 800;
+  }
+
+  .steps li {
+    flex: 1;
+    padding: .3rem .1rem;
+    border: 2px solid var(--ink);
+    border-radius: 999px;
+    background: var(--card);
+    color: var(--muted);
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .steps li.done { background: var(--ok-bg); color: var(--ink); }
+  .steps li.now { background: var(--yellow); color: var(--ink); box-shadow: 2px 2px 0 var(--ink); }
+
+  .card {
+    background: var(--card);
+    border: var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--pop);
+    padding: 1.1rem;
+    margin-bottom: 1.1rem;
+  }
+
+  .hint { margin: 0 0 1rem; color: var(--muted); }
+
+  label { display: block; margin-bottom: .9rem; font-weight: 800; }
+  label small { display: block; font-weight: 600; color: var(--muted); }
+
+  input, select {
+    display: block;
+    width: 100%;
+    min-height: 50px;
+    margin-top: .3rem;
+    padding: .6rem .8rem;
+    border: var(--border);
+    border-radius: 14px;
+    background: #fff;
+    color: var(--ink);
+    font: inherit;
+    font-size: 16px; /* abaixo disso o iPhone dá zoom no campo */
+  }
+
+  input::placeholder { color: #7d7286; }
+
+  input:focus-visible, select:focus-visible, button:focus-visible, summary:focus-visible {
+    outline: 3px solid var(--purple);
+    outline-offset: 2px;
+  }
+
+  button {
+    width: 100%;
+    min-height: 52px;
+    padding: .6rem 1rem;
+    border: var(--border);
+    border-radius: 14px;
+    background: var(--pink);
+    box-shadow: var(--pop);
+    color: var(--ink);
+    font: 600 1.1rem Fredoka, "Trebuchet MS", sans-serif;
+    cursor: pointer;
+    transition: transform .08s, box-shadow .08s, background .15s;
+  }
+
+  button:hover { background: var(--pink-dark); }
+  button:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--ink); }
+  button:disabled { opacity: .6; cursor: progress; }
+
+  button.ghost { background: var(--teal); }
+  button.ghost:hover { background: #12ab9b; }
+  button.danger { background: #fff; color: var(--bad); }
+  button.danger:hover { background: var(--bad-bg); }
+
+  button.link {
+    width: auto;
+    min-height: 44px;
+    border: 0;
+    background: none;
+    box-shadow: none;
+    color: var(--muted);
+    font: 700 1rem Nunito, system-ui, sans-serif;
+    text-decoration: underline;
+  }
+
+  button.link:hover { background: none; color: var(--ink); }
+
+  .tabs { display: flex; gap: .6rem; margin-bottom: 1.1rem; }
+  .tabs button { background: var(--card); box-shadow: none; font-size: 1rem; }
+  .tabs button:hover { background: #fff; }
+  .tabs button[aria-selected="true"] { background: var(--yellow); box-shadow: var(--pop); }
+
+  .message {
+    margin: 0 0 1rem;
+    padding: .6rem .8rem;
+    border: 2px solid currentColor;
+    border-radius: 12px;
+    font-weight: 700;
+  }
+
+  .message:empty { display: none; }
+  .message.error { background: var(--bad-bg); color: var(--bad); }
+  .message.success { background: var(--ok-bg); color: var(--ok); }
+
+  .names { display: flex; flex-wrap: wrap; gap: .5rem; margin: .6rem 0 0; padding: 0; list-style: none; }
+
+  .names li {
+    padding: .15rem .7rem;
+    border: 2px solid var(--ink);
+    border-radius: 999px;
+    background: var(--yellow);
+    font-weight: 800;
+    overflow-wrap: anywhere;
+  }
+
+  .names li:nth-child(3n + 1) { background: var(--pink); transform: rotate(-2deg); }
+  .names li:nth-child(3n + 2) { background: var(--teal); transform: rotate(1.5deg); }
+
+  .gift {
+    display: block;
+    height: auto;
+    padding: 1.6rem 1rem;
+    margin-bottom: 1.1rem;
+    border-radius: var(--radius);
+    background: var(--yellow);
+    text-align: center;
+  }
+
+  .gift:hover { background: #ffc01a; }
+  .gift-emoji { display: block; font-size: 5rem; line-height: 1.15; animation: wiggle 1.6s ease-in-out infinite; }
+  .gift-title { display: block; margin-top: .4rem; font-size: 1.5rem; }
+  .gift-note { display: block; font: 700 1rem Nunito, system-ui, sans-serif; }
+
+  .combo {
+    padding: 1.2rem 1.1rem;
+    margin-bottom: 1.1rem;
+    border: var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--pop);
+    background: var(--teal);
+    animation: pop .35s cubic-bezier(.3, 1.6, .5, 1);
+  }
+
+  .combo p { margin: 0 0 .9rem; font-weight: 700; }
+
+  .combo.small { background: var(--card); animation: none; }
+  .combo.small:nth-of-type(odd) { transform: rotate(-.5deg); }
+  .combo.small:nth-of-type(even) { transform: rotate(.5deg); }
+
+  .combo-label { display: block; font-size: .95rem; font-weight: 800; }
+
+  .combo-value {
+    display: block;
+    margin-bottom: .8rem;
+    font-size: 1.35rem;
+    overflow-wrap: anywhere;
+  }
+
+  .combo.small .combo-value { font-size: 1.15rem; }
+  .combo-value:last-of-type { margin-bottom: 0; }
+
+  .combo .owner { margin: .9rem 0 .7rem; color: var(--muted); }
+
+  .credits {
+    margin-top: .9rem;
+    padding-top: .7rem;
+    border-top: 3px dotted var(--ink);
+    animation: pop .3s cubic-bezier(.3, 1.6, .5, 1);
+  }
+
+  .combo .credits p { margin: 0 0 .2rem; overflow-wrap: anywhere; }
+  .credits .author { font: 600 1.25rem Fredoka, "Trebuchet MS", sans-serif; }
+  .credits .right { color: var(--ok); font-weight: 800; }
+  .credits .wrong { color: var(--bad); font-weight: 800; }
+
+  .score {
+    margin: 0 0 1.1rem;
+    padding: .7rem 1rem;
+    border: var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--pop);
+    background: var(--yellow);
+    font-size: 1.25rem;
+    text-align: center;
+  }
+
+  details.card summary { min-height: 28px; font-size: 1.15rem; cursor: pointer; }
+  details.card[open] summary { margin-bottom: .8rem; }
+  details .group { margin-top: 1rem; padding-top: 1rem; border-top: 3px dotted var(--ink); }
+  details .actions { display: grid; gap: .6rem; }
+  details .actions:not(.group) { margin-top: .8rem; }
+
+  footer { text-align: center; }
+
+  .confetti {
+    position: fixed;
+    top: -3rem;
+    z-index: 10;
+    pointer-events: none;
+    font-size: 1.5rem;
+    animation: fall linear forwards;
+  }
+
+  @keyframes bob {
+    50% { transform: translateY(-8px) rotate(8deg); }
+  }
+
+  @keyframes wiggle {
+    0%, 60%, 100% { transform: rotate(0); }
+    70% { transform: rotate(-9deg) scale(1.06); }
+    80% { transform: rotate(8deg) scale(1.06); }
+    90% { transform: rotate(-4deg); }
+  }
+
+  @keyframes pop {
+    from { transform: scale(.8); opacity: 0; }
+  }
+
+  @keyframes fall {
+    to { transform: translateY(112vh) rotate(540deg); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+
+  @media (min-width: 40rem) {
+    h1 { font-size: 3.2rem; }
+    main { padding-top: 1.5rem; }
+    .floaty.c, .floaty.d { display: block; bottom: 10%; font-size: 1.5rem; }
+    .floaty.c { left: 16%; animation-delay: -2s; }
+    .floaty.d { right: 16%; animation-delay: -1.5s; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <span class="floaty a" aria-hidden="true">📚</span>
+  <span class="floaty b" aria-hidden="true">🍷</span>
+  <span class="floaty c" aria-hidden="true">🎁</span>
+  <span class="floaty d" aria-hidden="true">🍹</span>
+  <h1>Livro <span>&amp;</span> Copo</h1>
+  <p>O amigo secreto mais suspeito da família</p>
+</header>
+<main id="app" aria-live="polite"></main>
+
+<script>
+  "use strict";
+
+  // Endereço da API no VPS. Troque aqui se usar outro subdomínio.
+  const PRODUCTION_API = "https://amigo.filatrix3d.com";
+  const IS_LOCAL = ["localhost", "127.0.0.1"].includes(location.hostname);
+  const API_URL = IS_LOCAL ? "http://localhost:8787" : PRODUCTION_API;
+
+  const TOKEN_KEY = "livro-copo-token";
+  const POLL_MS = 20000;
+  const PHASES = [
+    ["cadastro", "✍️ Cadastro"],
+    ["sorteado", "🎲 Sorteio"],
+    ["revelado", "🎉 Revelação"],
+  ];
+  const MIN_PARTICIPANTS = 3;
+  const CONFETTI = ["📚", "🍷", "🎉", "🍹", "⭐", "🎁", "🍺", "📖"];
+  const pick = (items) => items[Math.floor(Math.random() * items.length)];
+  const BOOK_EXAMPLE = pick(["O Pequeno Príncipe", "Dom Casmurro", "O Hobbit", "Capitães da Areia"]);
+  const DRINK_EXAMPLE = pick(["Cachaça de jambu", "Vinho do Porto", "Cerveja artesanal", "Licor de jabuticaba"]);
+
+  const app = document.getElementById("app");
+
+  let token = readToken();
+  let state = null;
+  let authTab = "cadastro";
+  let organizerOpen = false;
+  let editing = false; // há texto digitado que uma atualização não pode apagar
+  let flash = null;
+  let notice = null; // confirmação que precisa sobreviver ao redesenho da tela
+  let organizerCode = "";
+  let giftOpen = false;
+  const openedReveals = new Set();
+
+  function confetti() {
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    for (let i = 0; i < 36; i += 1) {
+      const piece = el("span", { class: "confetti", "aria-hidden": "true" }, pick(CONFETTI));
+      piece.style.left = `${Math.random() * 100}vw`;
+      piece.style.animationDuration = `${1.6 + Math.random() * 1.6}s`;
+      piece.style.animationDelay = `${Math.random() * .5}s`;
+      piece.addEventListener("animationend", () => piece.remove());
+      document.body.append(piece);
+    }
+  }
+
+  function readToken() {
+    try { return localStorage.getItem(TOKEN_KEY); } catch { return null; }
+  }
+
+  function saveToken(value) {
+    token = value;
+    try {
+      if (value) localStorage.setItem(TOKEN_KEY, value);
+      else localStorage.removeItem(TOKEN_KEY);
+    } catch { /* sem armazenamento: vale só até fechar a página */ }
+  }
+
+  function familyCodeFromLink() {
+    return new URLSearchParams(location.hash.slice(1)).get("codigo") || "";
+  }
+
+  // Tudo vira nó de texto: nada digitado pela família é interpretado como HTML.
+  function el(tag, props = {}, ...children) {
+    const node = document.createElement(tag);
+    for (const [key, value] of Object.entries(props)) {
+      if (key === "class") node.className = value;
+      else if (key.startsWith("on")) node.addEventListener(key.slice(2), value);
+      else if (key in node) node[key] = value;
+      else node.setAttribute(key, value);
+    }
+    node.append(...children.flat().filter((child) => child !== null && child !== undefined));
+    return node;
+  }
+
+  async function api(method, path, body) {
+    let response;
+    try {
+      response = await fetch(API_URL + path, {
+        method,
+        headers: {
+          ...(body ? { "Content-Type": "application/json" } : {}),
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: body ? JSON.stringify(body) : undefined,
+      });
+    } catch {
+      throw new Error("Não consegui falar com o servidor. Confira sua internet e tente de novo.");
+    }
+    const data = await response.json().catch(() => ({}));
+    if (response.status === 401) {
+      saveToken(null);
+      state = null;
+      render();
+    }
+    if (!response.ok) throw new Error(data.erro || "Algo deu errado. Tente de novo.");
+    return data;
+  }
+
+  async function refresh({ force = false } = {}) {
+    if (!token) return;
+    const next = await api("GET", "/api/estado");
+    const changed = JSON.stringify(next) !== JSON.stringify(state);
+    state = next;
+    if (force || (changed && !editing)) render();
+  }
+
+  // Envia um formulário mostrando erro ou sucesso na caixa de mensagem dele.
+  function submitHandler(action) {
+    return async (event) => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const message = form.querySelector(".message");
+      const button = form.querySelector("button[type=submit]");
+      message.textContent = "";
+      message.className = "message";
+      button.disabled = true;
+      try {
+        await action(Object.fromEntries(new FormData(form)), form);
+      } catch (error) {
+        message.textContent = error.message;
+        message.className = "message error";
+      } finally {
+        button.disabled = false;
+      }
+    };
+  }
+
+  function noticeBox() {
+    const box = el("p", { class: notice ? "message success" : "message", role: "status" }, notice);
+    notice = null;
+    return box;
+  }
+
+  function field(label, name, props = {}, note) {
+    return el("label", {}, label, note ? el("small", {}, note) : null,
+      el("input", { name, required: true, ...props }));
+  }
+
+  function bookAndDrinkFields(values = {}) {
+    return [
+      field("📚 Um livro", "livro", { maxLength: 200, value: values.livro || "", autocomplete: "off", placeholder: `Ex.: ${BOOK_EXAMPLE}` }),
+      field("🍷 Uma bebida", "bebida", { maxLength: 200, value: values.bebida || "", autocomplete: "off", placeholder: `Ex.: ${DRINK_EXAMPLE}` }),
+    ];
+  }
+
+  function familyCodeField() {
+    return field("Código da família", "codigo", {
+      value: familyCodeFromLink(),
+      autocomplete: "off",
+      autocapitalize: "none",
+    });
+  }
+
+  function renderAuth() {
+    const tab = (id, label) => el("button", {
+      type: "button",
+      role: "tab",
+      "aria-selected": String(authTab === id),
+      onclick: () => { authTab = id; render(); },
+    }, label);
+
+    const enter = async (path, values) => {
+      const { token: newToken } = await api("POST", path, values);
+      saveToken(newToken);
+      await refresh({ force: true });
+    };
+
+    const signup = el("form", { class: "card", onsubmit: submitHandler((values) => enter("/api/cadastro", values)) },
+      el("h2", {}, "Entra na brincadeira! 🥳"),
+      el("p", { class: "hint" }, "Capricha na sugestão: ninguém vê até o dia da revelação."),
+      familyCodeField(),
+      field("Seu nome", "nome", { maxLength: 60, autocomplete: "given-name" }),
+      field("Crie uma senha", "senha", { type: "password", minLength: 4, maxLength: 64, autocomplete: "new-password" },
+        "Pelo menos 4 caracteres. Não use a senha de outras contas."),
+      bookAndDrinkFields(),
+      el("p", { class: "message", role: "alert" }),
+      el("button", { type: "submit" }, "Tô dentro! 🎉"));
+
+    const login = el("form", { class: "card", onsubmit: submitHandler((values) => enter("/api/entrar", values)) },
+      el("h2", {}, "Que bom te ver de novo! 👋"),
+      el("p", { class: "hint" }, "Use o nome e a senha do seu cadastro."),
+      familyCodeField(),
+      field("Seu nome", "nome", { maxLength: 60, autocomplete: "username" }),
+      field("Sua senha", "senha", { type: "password", autocomplete: "current-password" }),
+      el("p", { class: "message", role: "alert" }),
+      el("button", { type: "submit" }, "Entrar 🚪"));
+
+    return [
+      el("div", { class: "tabs", role: "tablist" }, tab("cadastro", "Quero participar"), tab("entrar", "Já me cadastrei")),
+      authTab === "cadastro" ? signup : login,
+    ];
+  }
+
+  function renderSteps() {
+    const current = PHASES.findIndex(([id]) => id === state.fase);
+    return el("ol", { class: "steps" }, PHASES.map(([, label], index) =>
+      el("li", {
+        class: index === current ? "now" : index < current ? "done" : "",
+        ...(index === current ? { "aria-current": "step" } : {}),
+      }, label)));
+  }
+
+  function renderRegistration() {
+    const form = el("form", {
+      class: "card",
+      onsubmit: submitHandler(async (values) => {
+        await api("PUT", "/api/sugestao", values);
+        notice = "Sugestão salva! ✅";
+        await refresh({ force: true });
+      }),
+    },
+      el("h2", {}, `Oi, ${state.eu.nome}! 👋`),
+      el("p", { class: "hint" }, "Mudou de ideia? Pode trocar até o sorteio."),
+      bookAndDrinkFields(state.eu),
+      noticeBox(),
+      el("button", { type: "submit" }, "Salvar sugestão 💾"));
+
+    const total = state.participantes.length;
+    const missing = MIN_PARTICIPANTS - total;
+    return [form, el("section", { class: "card" },
+      el("h2", {}, total === 1 ? "🙋 1 pessoa na roda" : `🙋 ${total} pessoas na roda`),
+      missing > 0
+        ? el("p", { class: "hint" }, `Falta${missing > 1 ? "m" : ""} ${missing} para poder sortear.`)
+        : null,
+      el("ul", { class: "names" }, state.participantes.map((person) => el("li", {}, person.nome))))];
+  }
+
+  function comboBlock(combo) {
+    return [
+      el("span", { class: "combo-label" }, "📚 Livro"),
+      el("span", { class: "combo-value" }, combo.livro),
+      el("span", { class: "combo-label" }, "🍷 Bebida"),
+      el("span", { class: "combo-value" }, combo.bebida),
+    ];
+  }
+
+  function renderDrawn() {
+    if (!giftOpen) {
+      return el("button", {
+        type: "button",
+        class: "gift",
+        onclick: () => { giftOpen = true; confetti(); render(); },
+      },
+        el("span", { class: "gift-emoji", "aria-hidden": "true" }, "🎁"),
+        el("span", { class: "gift-title" }, "Saiu o seu combo!"),
+        el("span", { class: "gift-note" }, "Olha para os lados e toca para abrir"));
+    }
+
+    const others = state.participantes.filter((person) => person.id !== state.eu.id);
+    const select = el("select", { name: "participanteId", required: true },
+      el("option", { value: "" }, "Escolhe o suspeito 🕵️"),
+      others.map((person) => el("option", {
+        value: String(person.id),
+        selected: person.id === state.palpiteId,
+      }, person.nome)));
+
+    const form = el("form", {
+      class: "card",
+      onsubmit: submitHandler(async (values) => {
+        await api("PUT", "/api/palpite", { participanteId: Number(values.participanteId) });
+        notice = "Palpite guardado! 🤫 Pode mudar até a revelação.";
+        await refresh({ force: true });
+      }),
+    },
+      el("h2", {}, "🕵️ Quem sugeriu isso?"),
+      el("p", { class: "hint" },
+        `${state.palpitesFeitos} de ${state.participantes.length} já deram palpite.`),
+      el("label", {}, "Meu palpite", select),
+      noticeBox(),
+      el("button", { type: "submit" }, state.palpiteId ? "Mudar palpite 🤔" : "Cravar palpite 🎯"));
+
+    return [
+      el("section", { class: "combo" },
+        el("h2", {}, "🎁 Seu combo"),
+        el("p", {}, "Bico calado até a revelação! 🤐"),
+        comboBlock(state.combo)),
+      form,
+    ];
+  }
+
+  function revealCredits(item) {
+    return el("div", { class: "credits" },
+      el("p", { class: "author" }, `💡 Foi ${item.autor}!`),
+      item.palpite
+        ? el("p", { class: item.acertou ? "right" : "wrong" },
+            item.acertou
+              ? `🎯 ${item.recebedor} acertou!`
+              : `🙈 ${item.recebedor} chutou ${item.palpite}`)
+        : el("p", {}, `🤷 ${item.recebedor} não deu palpite`));
+  }
+
+  function renderReveal() {
+    const total = state.revelacao.length;
+    const hits = state.revelacao.filter((item) => item.acertou).length;
+    const remaining = total - openedReveals.size;
+    const open = (item) => () => {
+      openedReveals.add(item.recebedor);
+      if (item.acertou || openedReveals.size === total) confetti();
+      render();
+    };
+
+    return [
+      el("p", { class: "score" }, remaining > 0
+        ? `🥁 Faltam ${remaining} de ${total} combos`
+        : `🏆 ${hits} de ${total} palpites certos!`),
+      state.revelacao.map((item) => el("article", { class: "combo small" },
+        comboBlock(item),
+        el("p", { class: "owner" }, `Saiu para ${item.recebedor}`),
+        openedReveals.has(item.recebedor)
+          ? revealCredits(item)
+          : el("button", { type: "button", onclick: open(item) }, "🥁 Quem sugeriu?"))),
+    ];
+  }
+
+  function renderOrganizer() {
+    const codeInput = el("input", {
+      type: "password",
+      autocomplete: "off",
+      "aria-label": "Código do organizador",
+      placeholder: "Código do organizador",
+      value: organizerCode,
+      oninput: (event) => { organizerCode = event.currentTarget.value; },
+    });
+    const message = el("p", { class: "message", role: "status" });
+    const celebrate = ["/api/admin/sortear", "/api/admin/revelar"];
+
+    const run = (path, confirmation, extra = () => ({})) => async (event) => {
+      if (confirmation && !confirm(confirmation)) return;
+      const button = event.currentTarget;
+      button.disabled = true;
+      message.textContent = "";
+      message.className = "message";
+      try {
+        await api("POST", path, { codigoOrganizador: organizerCode, ...extra() });
+        await refresh({ force: true });
+        if (celebrate.includes(path)) confetti();
+      } catch (error) {
+        message.textContent = error.message;
+        message.className = "message error";
+        button.disabled = false;
+      }
+    };
+
+    const personSelect = () => el("select", { "aria-label": "Pessoa" },
+      state.participantes.map((person) => el("option", { value: String(person.id) }, person.nome)));
+
+    const primary = {
+      cadastro: el("button", {
+        type: "button",
+        onclick: run("/api/admin/sortear", "Fazer o sorteio agora? As sugestões ficam travadas."),
+      }, "🎲 Fazer o sorteio"),
+      sorteado: el("button", {
+        type: "button",
+        onclick: run("/api/admin/revelar", `Revelar tudo agora? ${state.palpitesFeitos} de ${state.participantes.length} deram palpite.`),
+      }, "🎉 Revelar para todo mundo"),
+      revelado: null,
+    }[state.fase];
+
+    const removeSelect = personSelect();
+    const passwordSelect = personSelect();
+    const newPassword = el("input", {
+      type: "text",
+      autocomplete: "off",
+      "aria-label": "Nova senha",
+      placeholder: "Nova senha",
+    });
+
+    return el("details", {
+      class: "card",
+      open: organizerOpen,
+      ontoggle: (event) => { organizerOpen = event.currentTarget.open; },
+    },
+      el("summary", {}, "🎩 Área do organizador"),
+      el("p", { class: "hint" }, "Só funciona com o código do organizador."),
+      codeInput,
+      message,
+      el("div", { class: "actions" }, primary),
+      el("div", { class: "group actions" },
+        el("label", { style: "margin:0" }, "Trocar senha de quem esqueceu", passwordSelect),
+        newPassword,
+        el("button", {
+          type: "button",
+          class: "ghost",
+          onclick: run("/api/admin/trocar-senha", null, () => ({
+            participanteId: Number(passwordSelect.value),
+            senha: newPassword.value,
+          })),
+        }, "Trocar senha")),
+      state.fase === "cadastro"
+        ? el("div", { class: "group actions" },
+            el("label", { style: "margin:0" }, "Remover cadastro", removeSelect),
+            el("button", {
+              type: "button",
+              class: "danger",
+              onclick: run("/api/admin/remover", "Remover essa pessoa e a sugestão dela?", () => ({
+                participanteId: Number(removeSelect.value),
+              })),
+            }, "Remover"))
+        : el("div", { class: "group actions" },
+            el("button", {
+              type: "button",
+              class: "danger",
+              onclick: run("/api/admin/refazer", "Desfazer o sorteio? Combos e palpites serão apagados."),
+            }, "Desfazer o sorteio")));
+  }
+
+  function renderSession() {
+    if (state.fase === "cadastro") {
+      giftOpen = false;
+      openedReveals.clear();
+    }
+    const views = { cadastro: renderRegistration, sorteado: renderDrawn, revelado: renderReveal };
+    return [
+      renderSteps(),
+      views[state.fase](),
+      renderOrganizer(),
+      el("footer", {},
+        el("button", {
+          type: "button",
+          class: "link",
+          onclick: () => { saveToken(null); state = null; render(); },
+        }, `Sair (${state.eu.nome})`)),
+    ];
+  }
+
+  function render() {
+    editing = false;
+    const content = token && !state
+      ? [el("p", { class: "hint" }, flash || "Carregando…")]
+      : state ? renderSession() : renderAuth();
+    app.replaceChildren(...content.flat(Infinity));
+  }
+
+  app.addEventListener("input", () => { editing = true; });
+
+  async function poll() {
+    if (document.hidden || !token) return;
+    try {
+      flash = null;
+      await refresh();
+    } catch (error) {
+      if (!state && token) {
+        flash = error.message;
+        render();
+      }
+    }
+  }
+
+  document.addEventListener("visibilitychange", poll);
+  setInterval(poll, POLL_MS);
+  render();
+  poll();
+</script>
+</body>
+</html>
